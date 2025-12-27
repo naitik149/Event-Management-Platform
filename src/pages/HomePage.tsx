@@ -44,12 +44,6 @@ const features = [
   },
 ];
 
-const stats = [
-  { value: "500+", label: "Events Hosted" },
-  { value: "10K+", label: "Students Registered" },
-  { value: "50+", label: "Active Clubs" },
-  { value: "99%", label: "Satisfaction Rate" },
-];
 
 export default function HomePage() {
   return (
@@ -192,21 +186,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-24 bg-primary/5">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <p className="text-4xl md:text-5xl font-display font-bold text-gradient mb-2">
-                  {stat.value}
-                </p>
-                <p className="text-sm text-muted-foreground">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* How It Works */}
       <section className="py-24">

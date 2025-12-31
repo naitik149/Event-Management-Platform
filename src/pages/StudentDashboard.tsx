@@ -17,11 +17,22 @@ import {
   CheckCircle,
   AlertCircle,
   Lock,
+  Settings,
+  User,
+  Mail,
+  Phone,
+  Save,
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const mockStudentData = {
   name: "Alex Johnson",
   email: "alex.johnson@college.edu",
+  phone: "+91 98765 00000",
+  studentId: "STU2024001",
+  department: "Computer Science",
+  year: "3rd Year",
   registeredEvents: [
     {
       id: 1,
@@ -82,10 +93,20 @@ const statusConfig: Record<string, { label: string; variant: "registered" | "pen
 
 export default function StudentDashboard() {
   const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
+  const [profileData, setProfileData] = useState({
+    name: mockStudentData.name,
+    email: mockStudentData.email,
+    phone: mockStudentData.phone,
+  });
 
   const completedEvents = mockStudentData.registeredEvents.filter(e => e.status === "completed");
   const upcomingEvents = mockStudentData.registeredEvents.filter(e => e.status === "registered");
   const pendingFeedback = mockStudentData.registeredEvents.filter(e => e.status === "attended");
+
+  const handleProfileSave = () => {
+    // Mock save - in real app this would call an API
+    console.log("Profile saved:", profileData);
+  };
 
   return (
     <Layout>
@@ -159,6 +180,10 @@ export default function StudentDashboard() {
                 </TabsTrigger>
                 <TabsTrigger value="certificates" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Certificates
+                </TabsTrigger>
+                <TabsTrigger value="profile" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  <Settings className="w-4 h-4 mr-1" />
+                  Profile
                 </TabsTrigger>
               </TabsList>
 
@@ -316,6 +341,85 @@ export default function StudentDashboard() {
                       </CardContent>
                     </Card>
                   ))}
+                </div>
+              </TabsContent>
+
+              {/* Profile Settings Tab */}
+              <TabsContent value="profile">
+                <div className="grid md:grid-cols-2 gap-8">
+                  {/* Edit Profile */}
+                  <Card variant="glass">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-3">
+                        <User className="w-5 h-5 text-primary" />
+                        Edit Profile
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Full Name</Label>
+                        <Input
+                          id="name"
+                          value={profileData.name}
+                          onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
+                          className="bg-secondary/50 border-border/50"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email Address</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={profileData.email}
+                          onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
+                          className="bg-secondary/50 border-border/50"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          value={profileData.phone}
+                          onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
+                          className="bg-secondary/50 border-border/50"
+                        />
+                      </div>
+                      <Button onClick={handleProfileSave} className="w-full">
+                        <Save className="w-4 h-4 mr-2" />
+                        Save Changes
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* Account Info */}
+                  <Card variant="feature">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-3">
+                        <Settings className="w-5 h-5 text-primary" />
+                        Account Information
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="p-4 rounded-lg bg-secondary/30 border border-border/30">
+                        <p className="text-xs text-muted-foreground mb-1">Student ID</p>
+                        <p className="font-display font-semibold">{mockStudentData.studentId}</p>
+                      </div>
+                      <div className="p-4 rounded-lg bg-secondary/30 border border-border/30">
+                        <p className="text-xs text-muted-foreground mb-1">Department</p>
+                        <p className="font-display font-semibold">{mockStudentData.department}</p>
+                      </div>
+                      <div className="p-4 rounded-lg bg-secondary/30 border border-border/30">
+                        <p className="text-xs text-muted-foreground mb-1">Year</p>
+                        <p className="font-display font-semibold">{mockStudentData.year}</p>
+                      </div>
+                      <div className="mt-4 p-3 rounded-lg bg-primary/10 border border-primary/30">
+                        <p className="text-xs text-muted-foreground">
+                          To update your Student ID, Department, or Year, please contact the admin.
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </TabsContent>
             </Tabs>

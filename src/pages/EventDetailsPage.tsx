@@ -15,6 +15,9 @@ import {
   MessageSquare,
   Award,
   Bell,
+  Instagram,
+  Mail,
+  Phone,
 } from "lucide-react";
 
 const mockEvent = {
@@ -46,6 +49,11 @@ Prizes worth ₹50,000 to be won! Free food, swag, and networking opportunities 
     { time: "Feedback Submission", date: "Jan 24, 2025 - 6:30 PM", completed: false },
     { time: "Certificate Unlock", date: "After Feedback", completed: false },
   ],
+  contact: {
+    email: "codingclub@college.edu",
+    phone: "+91 98765 43210",
+    instagram: "@codingclub_official",
+  },
 };
 
 export default function EventDetailsPage() {
@@ -230,6 +238,38 @@ export default function EventDetailsPage() {
                         <span>{item.text}</span>
                       </div>
                     ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Contact & Social */}
+              <Card variant="glass">
+                <CardContent className="pt-6">
+                  <h3 className="font-display font-semibold mb-4">Contact & Social</h3>
+                  <div className="space-y-3">
+                    <a 
+                      href={`mailto:${mockEvent.contact.email}`} 
+                      className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Mail className="w-4 h-4 text-primary" />
+                      <span>{mockEvent.contact.email}</span>
+                    </a>
+                    <a 
+                      href={`tel:${mockEvent.contact.phone}`} 
+                      className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Phone className="w-4 h-4 text-primary" />
+                      <span>{mockEvent.contact.phone}</span>
+                    </a>
+                    <a 
+                      href={`https://instagram.com/${mockEvent.contact.instagram.replace('@', '')}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Instagram className="w-4 h-4 text-primary" />
+                      <span>{mockEvent.contact.instagram}</span>
+                    </a>
                   </div>
                 </CardContent>
               </Card>

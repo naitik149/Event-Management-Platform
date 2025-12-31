@@ -13,6 +13,9 @@ import {
   Search,
   Filter,
   ChevronRight,
+  Instagram,
+  Mail,
+  Phone,
 } from "lucide-react";
 
 const mockEvents = [
@@ -27,6 +30,7 @@ const mockEvents = [
     status: "open",
     category: "Technical",
     image: "🖥️",
+    contact: { email: "codingclub@college.edu", phone: "+91 98765 43210", instagram: "@codingclub_official" },
   },
   {
     id: 2,
@@ -39,6 +43,7 @@ const mockEvents = [
     status: "open",
     category: "Workshop",
     image: "🤖",
+    contact: { email: "aisociety@college.edu", phone: "+91 98765 12345", instagram: "@ai_society" },
   },
   {
     id: 3,
@@ -51,6 +56,7 @@ const mockEvents = [
     status: "closed",
     category: "Cultural",
     image: "🎭",
+    contact: { email: "cultural@college.edu", phone: "+91 98765 67890", instagram: "@cultural_committee" },
   },
   {
     id: 4,
@@ -63,6 +69,7 @@ const mockEvents = [
     status: "open",
     category: "Business",
     image: "🚀",
+    contact: { email: "ecell@college.edu", phone: "+91 98765 11111", instagram: "@ecell_official" },
   },
   {
     id: 5,
@@ -75,6 +82,7 @@ const mockEvents = [
     status: "open",
     category: "Creative",
     image: "📸",
+    contact: { email: "photoclub@college.edu", phone: "+91 98765 22222", instagram: "@photoclub" },
   },
   {
     id: 6,
@@ -87,6 +95,7 @@ const mockEvents = [
     status: "open",
     category: "Technical",
     image: "🌐",
+    contact: { email: "dsc@college.edu", phone: "+91 98765 33333", instagram: "@dsc_college" },
   },
 ];
 
@@ -182,48 +191,67 @@ export default function EventsPage() {
                     </p>
                   </div>
 
-                  {/* Event Details */}
-                  <CardContent className="pt-0">
-                    <div className="space-y-3 mb-6">
-                      <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                        <Calendar className="w-4 h-4 text-primary" />
-                        <span>{event.date}</span>
-                        <Clock className="w-4 h-4 text-primary ml-2" />
-                        <span>{event.time}</span>
+                    {/* Event Details */}
+                    <CardContent className="pt-0">
+                      <div className="space-y-3 mb-4">
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                          <Calendar className="w-4 h-4 text-primary" />
+                          <span>{event.date}</span>
+                          <Clock className="w-4 h-4 text-primary ml-2" />
+                          <span>{event.time}</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                          <MapPin className="w-4 h-4 text-primary" />
+                          <span>{event.venue}</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                          <Users className="w-4 h-4 text-primary" />
+                          <span>{event.seats.filled} / {event.seats.total} filled</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                        <MapPin className="w-4 h-4 text-primary" />
-                        <span>{event.venue}</span>
-                      </div>
-                      <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                        <Users className="w-4 h-4 text-primary" />
-                        <span>{event.seats.filled} / {event.seats.total} filled</span>
-                      </div>
-                    </div>
 
-                    {/* Progress Bar */}
-                    <div className="mb-6">
-                      <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
-                        <div
-                          className="h-full bg-primary rounded-full transition-all duration-500"
-                          style={{ width: `${(event.seats.filled / event.seats.total) * 100}%` }}
-                        />
+                      {/* Contact Details */}
+                      <div className="mb-4 p-3 rounded-lg bg-secondary/30 border border-border/30">
+                        <p className="text-xs text-muted-foreground mb-2 font-medium">Contact & Social</p>
+                        <div className="space-y-1.5">
+                          <a href={`mailto:${event.contact.email}`} className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors">
+                            <Mail className="w-3 h-3" />
+                            <span>{event.contact.email}</span>
+                          </a>
+                          <a href={`tel:${event.contact.phone}`} className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors">
+                            <Phone className="w-3 h-3" />
+                            <span>{event.contact.phone}</span>
+                          </a>
+                          <a href={`https://instagram.com/${event.contact.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors">
+                            <Instagram className="w-3 h-3" />
+                            <span>{event.contact.instagram}</span>
+                          </a>
+                        </div>
                       </div>
-                    </div>
 
-                    <Button
-                      variant={event.status === "open" ? "default" : "secondary"}
-                      className="w-full"
-                      asChild
-                      disabled={event.status !== "open"}
-                    >
-                      <Link to={`/events/${event.id}`}>
-                        View Details
-                        <ChevronRight className="w-4 h-4 ml-2" />
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
+                      {/* Progress Bar */}
+                      <div className="mb-4">
+                        <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
+                          <div
+                            className="h-full bg-primary rounded-full transition-all duration-500"
+                            style={{ width: `${(event.seats.filled / event.seats.total) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      <Button
+                        variant={event.status === "open" ? "default" : "secondary"}
+                        className="w-full"
+                        asChild
+                        disabled={event.status !== "open"}
+                      >
+                        <Link to={`/events/${event.id}`}>
+                          View Details
+                          <ChevronRight className="w-4 h-4 ml-2" />
+                        </Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
               ))}
             </div>
           )}

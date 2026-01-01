@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { GraduationCap, Github, Twitter, Linkedin, Heart } from "lucide-react";
+import { Zap, Github, Twitter, Linkedin, Heart } from "lucide-react";
 
 export function Footer() {
   return (
@@ -9,12 +9,12 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-soft">
-                <GraduationCap className="w-5 h-5 text-primary-foreground" />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-soft">
+                <Zap className="w-5 h-5 text-white" />
               </div>
               <span className="font-display font-bold text-lg">
-                <span className="text-primary">Campus</span>
-                <span className="text-foreground">Connect</span>
+                <span className="text-gradient">Event</span>
+                <span className="text-foreground">Flow</span>
               </span>
             </Link>
             <p className="text-sm text-muted-foreground">
@@ -102,7 +102,7 @@ export function Footer() {
 
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © 2025 CampusConnect. All rights reserved.
+            © 2025 EventFlow. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground flex items-center gap-1">
             Made with <Heart className="w-4 h-4 text-destructive fill-destructive" /> for students everywhere

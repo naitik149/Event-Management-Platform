@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GraduationCap, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { Zap, Mail, Lock, User, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -19,10 +19,14 @@ export default function LoginPage() {
           <div className="max-w-md mx-auto">
             {/* Logo */}
             <div className="text-center mb-8">
-              <Link to="/" className="inline-flex items-center gap-2 group">
-                <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-soft">
-                  <GraduationCap className="w-6 h-6 text-primary-foreground" />
+              <Link to="/" className="inline-flex items-center gap-3 group">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-soft">
+                  <Zap className="w-6 h-6 text-white" />
                 </div>
+                <span className="font-display font-bold text-xl">
+                  <span className="text-gradient">Event</span>
+                  <span className="text-foreground">Flow</span>
+                </span>
               </Link>
             </div>
 

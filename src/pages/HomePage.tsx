@@ -10,7 +10,7 @@ import {
   Bell,
   Star,
   ArrowRight,
-  GraduationCap,
+  Zap,
   Users,
   Sparkles,
   CheckCircle2,
@@ -134,7 +134,7 @@ export default function HomePage() {
               </Button>
               <Button variant="outline" size="lg" className="rounded-full px-8" asChild>
                 <Link to="/login">
-                  <GraduationCap className="w-5 h-5 mr-2" />
+                  <Zap className="w-5 h-5 mr-2" />
                   Get Started
                 </Link>
               </Button>
@@ -235,7 +235,7 @@ export default function HomePage() {
               One Platform. <span className="text-gradient">Endless Possibilities.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              CampusConnect brings together event discovery, QR-based attendance, 
+              EventFlow brings together event discovery, QR-based attendance, 
               automated certificates, and verified feedback for students of all branches.
             </p>
           </div>

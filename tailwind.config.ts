@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["var(--font-display)", "monospace"],
+        display: ["var(--font-display)", "sans-serif"],
         body: ["var(--font-body)", "sans-serif"],
       },
       colors: {
@@ -100,29 +100,17 @@ export default {
           "0%": { opacity: "0", transform: "scale(0.95)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
-        "glow-pulse": {
-          "0%, 100%": { boxShadow: "0 0 20px hsl(173 80% 50% / 0.4)" },
-          "50%": { boxShadow: "0 0 40px hsl(173 80% 50% / 0.6)" },
-        },
         "float": {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" },
-        },
-        "typing": {
-          "0%": { width: "0" },
-          "100%": { width: "100%" },
-        },
-        "blink": {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0" },
         },
         "slide-up": {
           "0%": { opacity: "0", transform: "translateY(100%)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        "shimmer": {
-          "0%": { backgroundPosition: "-200% 0" },
-          "100%": { backgroundPosition: "200% 0" },
+        "bounce-gentle": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
         },
       },
       animation: {
@@ -132,12 +120,9 @@ export default {
         "fade-in-left": "fade-in-left 0.6s ease-out forwards",
         "fade-in-right": "fade-in-right 0.6s ease-out forwards",
         "scale-in": "scale-in 0.4s ease-out forwards",
-        "glow-pulse": "glow-pulse 2s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
-        "typing": "typing 2s steps(40) forwards",
-        "blink": "blink 1s step-end infinite",
         "slide-up": "slide-up 0.5s ease-out forwards",
-        "shimmer": "shimmer 2s linear infinite",
+        "bounce-gentle": "bounce-gentle 2s ease-in-out infinite",
       },
     },
   },

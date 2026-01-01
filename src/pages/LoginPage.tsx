@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Terminal, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { GraduationCap, Mail, Lock, User, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -20,24 +20,24 @@ export default function LoginPage() {
             {/* Logo */}
             <div className="text-center mb-8">
               <Link to="/" className="inline-flex items-center gap-2 group">
-                <div className="w-12 h-12 rounded-xl bg-primary/20 border border-primary/50 flex items-center justify-center group-hover:glow-primary transition-all duration-300">
-                  <Terminal className="w-6 h-6 text-primary" />
+                <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-soft">
+                  <GraduationCap className="w-6 h-6 text-primary-foreground" />
                 </div>
               </Link>
             </div>
 
-            <Card variant="glass" className="overflow-hidden">
+            <Card className="overflow-hidden">
               <Tabs defaultValue="login">
-                <TabsList className="w-full rounded-none bg-secondary/30 p-0">
+                <TabsList className="w-full rounded-none bg-secondary p-0">
                   <TabsTrigger
                     value="login"
-                    className="flex-1 rounded-none py-4 data-[state=active]:bg-primary/20 data-[state=active]:text-primary"
+                    className="flex-1 rounded-none py-4 data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
                   >
                     Login
                   </TabsTrigger>
                   <TabsTrigger
                     value="register"
-                    className="flex-1 rounded-none py-4 data-[state=active]:bg-primary/20 data-[state=active]:text-primary"
+                    className="flex-1 rounded-none py-4 data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
                   >
                     Register
                   </TabsTrigger>
@@ -62,7 +62,7 @@ export default function LoginPage() {
                           placeholder="you@college.edu"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="pl-10 bg-secondary/50 border-border/50 focus:border-primary"
+                          className="pl-10 bg-secondary border-border focus:border-primary"
                         />
                       </div>
                     </div>
@@ -76,7 +76,7 @@ export default function LoginPage() {
                           placeholder="••••••••"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="pl-10 bg-secondary/50 border-border/50 focus:border-primary"
+                          className="pl-10 bg-secondary border-border focus:border-primary"
                         />
                       </div>
                     </div>
@@ -89,7 +89,7 @@ export default function LoginPage() {
                         Forgot password?
                       </a>
                     </div>
-                    <Button variant="hero" className="w-full" asChild>
+                    <Button className="w-full" asChild>
                       <Link to="/dashboard">
                         Login
                         <ArrowRight className="w-4 h-4 ml-2" />
@@ -115,7 +115,7 @@ export default function LoginPage() {
                           id="name"
                           type="text"
                           placeholder="John Doe"
-                          className="pl-10 bg-secondary/50 border-border/50 focus:border-primary"
+                          className="pl-10 bg-secondary border-border focus:border-primary"
                         />
                       </div>
                     </div>
@@ -127,7 +127,7 @@ export default function LoginPage() {
                           id="register-email"
                           type="email"
                           placeholder="you@college.edu"
-                          className="pl-10 bg-secondary/50 border-border/50 focus:border-primary"
+                          className="pl-10 bg-secondary border-border focus:border-primary"
                         />
                       </div>
                     </div>
@@ -139,7 +139,7 @@ export default function LoginPage() {
                           id="register-password"
                           type="password"
                           placeholder="••••••••"
-                          className="pl-10 bg-secondary/50 border-border/50 focus:border-primary"
+                          className="pl-10 bg-secondary border-border focus:border-primary"
                         />
                       </div>
                     </div>
@@ -156,7 +156,7 @@ export default function LoginPage() {
                         </Button>
                       </div>
                     </div>
-                    <Button variant="hero" className="w-full">
+                    <Button className="w-full">
                       Create Account
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
@@ -165,12 +165,10 @@ export default function LoginPage() {
               </Tabs>
             </Card>
 
-            {/* Terminal Style Footer */}
+            {/* Footer */}
             <div className="mt-8 text-center">
-              <p className="text-sm text-muted-foreground font-display">
-                <span className="text-primary">&lt;</span>
+              <p className="text-sm text-muted-foreground">
                 Secured with end-to-end encryption
-                <span className="text-primary">/&gt;</span>
               </p>
             </div>
           </div>

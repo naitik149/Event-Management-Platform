@@ -1,34 +1,34 @@
 import { Link } from "react-router-dom";
-import { Terminal, Github, Twitter, Linkedin } from "lucide-react";
+import { GraduationCap, Github, Twitter, Linkedin, Heart } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/50 bg-card/50">
+    <footer className="border-t border-border bg-secondary/30">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-primary/20 border border-primary/50 flex items-center justify-center">
-                <Terminal className="w-4 h-4 text-primary" />
+              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-soft">
+                <GraduationCap className="w-5 h-5 text-primary-foreground" />
               </div>
               <span className="font-display font-bold text-lg">
-                <span className="text-primary">Dark</span>
-                <span className="text-foreground">Code</span>
+                <span className="text-primary">Campus</span>
+                <span className="text-foreground">Connect</span>
               </span>
             </Link>
             <p className="text-sm text-muted-foreground">
-              Centralized event management for modern campuses.
+              Bringing students together through campus events. For every branch, every interest.
             </p>
             <div className="flex gap-3">
-              <a href="#" className="p-2 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors">
-                <Github className="w-4 h-4 text-muted-foreground" />
+              <a href="#" className="p-2 rounded-lg bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors">
+                <Github className="w-4 h-4" />
               </a>
-              <a href="#" className="p-2 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors">
-                <Twitter className="w-4 h-4 text-muted-foreground" />
+              <a href="#" className="p-2 rounded-lg bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors">
+                <Twitter className="w-4 h-4" />
               </a>
-              <a href="#" className="p-2 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors">
-                <Linkedin className="w-4 h-4 text-muted-foreground" />
+              <a href="#" className="p-2 rounded-lg bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors">
+                <Linkedin className="w-4 h-4" />
               </a>
             </div>
           </div>
@@ -49,7 +49,7 @@ export function Footer() {
               </li>
               <li>
                 <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Dashboard
+                  Student Dashboard
                 </Link>
               </li>
             </ul>
@@ -61,17 +61,17 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Documentation
+                  Help Center
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  API Reference
+                  Club Registration
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Support
+                  Contact Support
                 </a>
               </li>
             </ul>
@@ -100,14 +100,12 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © 2025 Dark Code Rising. All rights reserved.
+            © 2025 CampusConnect. All rights reserved.
           </p>
-          <p className="text-sm text-muted-foreground font-display">
-            <span className="text-primary">&lt;</span>
-            Built for Hackathons
-            <span className="text-primary">/&gt;</span>
+          <p className="text-sm text-muted-foreground flex items-center gap-1">
+            Made with <Heart className="w-4 h-4 text-destructive fill-destructive" /> for students everywhere
           </p>
         </div>
       </div>

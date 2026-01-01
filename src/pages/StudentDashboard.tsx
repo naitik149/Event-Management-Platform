@@ -116,7 +116,7 @@ export default function StudentDashboard() {
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row items-start justify-between gap-6">
               <div>
-                <Badge variant="glow" className="mb-4">Student Dashboard</Badge>
+                <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">Student Dashboard</Badge>
                 <h1 className="text-3xl md:text-4xl font-display font-bold mb-2">
                   Welcome back 👋
                 </h1>
@@ -124,9 +124,9 @@ export default function StudentDashboard() {
                   Track your events, attendance, and certificates here.
                 </p>
               </div>
-              <Card variant="glass" className="p-4">
+              <Card className="p-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-xl">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-xl">
                     👨‍🎓
                   </div>
                   <div>
@@ -141,7 +141,7 @@ export default function StudentDashboard() {
       </section>
 
       {/* Stats */}
-      <section className="py-8 border-b border-border/50">
+      <section className="py-8 border-b border-border">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
@@ -150,13 +150,13 @@ export default function StudentDashboard() {
               { value: pendingFeedback.length, label: "Pending Feedback", icon: MessageSquare },
               { value: completedEvents.length, label: "Certificates", icon: Award },
             ].map((stat, index) => (
-              <Card key={index} variant="feature" className="p-4">
+              <Card key={index} className="p-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <stat.icon className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-2xl font-display font-bold text-gradient">{stat.value}</p>
+                    <p className="text-2xl font-display font-bold text-primary">{stat.value}</p>
                     <p className="text-xs text-muted-foreground">{stat.label}</p>
                   </div>
                 </div>
@@ -171,7 +171,7 @@ export default function StudentDashboard() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <Tabs defaultValue="events" className="space-y-8">
-              <TabsList className="bg-secondary/50 p-1">
+              <TabsList className="bg-secondary p-1">
                 <TabsTrigger value="events" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   My Events
                 </TabsTrigger>
@@ -191,7 +191,7 @@ export default function StudentDashboard() {
               <TabsContent value="events" className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   {mockStudentData.registeredEvents.map((event) => (
-                    <Card key={event.id} variant="glow" className="group">
+                    <Card key={event.id} variant="elevated" className="group">
                       <CardContent className="pt-6">
                         <div className="flex items-start justify-between mb-4">
                           <Badge variant={statusConfig[event.status].variant}>
@@ -248,7 +248,7 @@ export default function StudentDashboard() {
 
               {/* QR Attendance Tab */}
               <TabsContent value="attendance">
-                <Card variant="glass" className="max-w-xl mx-auto">
+                <Card className="max-w-xl mx-auto">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-3">
                       <QrCode className="w-6 h-6 text-primary" />
@@ -257,7 +257,7 @@ export default function StudentDashboard() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-center py-8">
-                      <div className="w-32 h-32 mx-auto mb-6 rounded-lg bg-secondary/50 border border-border/50 flex items-center justify-center">
+                      <div className="w-32 h-32 mx-auto mb-6 rounded-lg bg-secondary border border-border flex items-center justify-center">
                         <QrCode className="w-16 h-16 text-muted-foreground" />
                       </div>
                       <h3 className="text-lg font-display font-semibold mb-2">
@@ -289,13 +289,13 @@ export default function StudentDashboard() {
               <TabsContent value="certificates">
                 <div className="grid md:grid-cols-2 gap-6">
                   {mockStudentData.registeredEvents.map((event) => (
-                    <Card key={event.id} variant={event.certificateAvailable ? "glow" : "default"}>
+                    <Card key={event.id} variant={event.certificateAvailable ? "elevated" : "default"}>
                       <CardContent className="pt-6">
                         <div className="flex items-start gap-4">
                           <div className={`w-14 h-14 rounded-lg flex items-center justify-center ${
                             event.certificateAvailable 
-                              ? "bg-primary/20 border border-primary/30"
-                              : "bg-secondary border border-border/50"
+                              ? "bg-primary/10 border border-primary/20"
+                              : "bg-secondary border border-border"
                           }`}>
                             {event.certificateAvailable ? (
                               <Award className="w-7 h-7 text-primary" />
@@ -348,7 +348,7 @@ export default function StudentDashboard() {
               <TabsContent value="profile">
                 <div className="grid md:grid-cols-2 gap-8">
                   {/* Edit Profile */}
-                  <Card variant="glass">
+                  <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-3">
                         <User className="w-5 h-5 text-primary" />
@@ -362,7 +362,7 @@ export default function StudentDashboard() {
                           id="name"
                           value={profileData.name}
                           onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                          className="bg-secondary/50 border-border/50"
+                          className="bg-secondary border-border"
                         />
                       </div>
                       <div className="space-y-2">
@@ -372,7 +372,7 @@ export default function StudentDashboard() {
                           type="email"
                           value={profileData.email}
                           onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
-                          className="bg-secondary/50 border-border/50"
+                          className="bg-secondary border-border"
                         />
                       </div>
                       <div className="space-y-2">
@@ -382,7 +382,7 @@ export default function StudentDashboard() {
                           type="tel"
                           value={profileData.phone}
                           onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
-                          className="bg-secondary/50 border-border/50"
+                          className="bg-secondary border-border"
                         />
                       </div>
                       <Button onClick={handleProfileSave} className="w-full">
@@ -393,7 +393,7 @@ export default function StudentDashboard() {
                   </Card>
 
                   {/* Account Info */}
-                  <Card variant="feature">
+                  <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-3">
                         <Settings className="w-5 h-5 text-primary" />
@@ -401,22 +401,41 @@ export default function StudentDashboard() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      <div className="p-4 rounded-lg bg-secondary/30 border border-border/30">
-                        <p className="text-xs text-muted-foreground mb-1">Student ID</p>
-                        <p className="font-display font-semibold">{mockStudentData.studentId}</p>
+                      <div className="p-4 rounded-lg bg-secondary">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <User className="w-5 h-5 text-primary" />
+                          </div>
+                          <div>
+                            <p className="font-display font-medium">{mockStudentData.name}</p>
+                            <p className="text-xs text-muted-foreground">{mockStudentData.studentId}</p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="p-4 rounded-lg bg-secondary/30 border border-border/30">
-                        <p className="text-xs text-muted-foreground mb-1">Department</p>
-                        <p className="font-display font-semibold">{mockStudentData.department}</p>
+
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary">
+                          <Mail className="w-4 h-4 text-primary" />
+                          <span className="text-sm">{mockStudentData.email}</span>
+                        </div>
+                        <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary">
+                          <Phone className="w-4 h-4 text-primary" />
+                          <span className="text-sm">{mockStudentData.phone}</span>
+                        </div>
                       </div>
-                      <div className="p-4 rounded-lg bg-secondary/30 border border-border/30">
-                        <p className="text-xs text-muted-foreground mb-1">Year</p>
-                        <p className="font-display font-semibold">{mockStudentData.year}</p>
-                      </div>
-                      <div className="mt-4 p-3 rounded-lg bg-primary/10 border border-primary/30">
-                        <p className="text-xs text-muted-foreground">
-                          To update your Student ID, Department, or Year, please contact the admin.
-                        </p>
+
+                      <div className="pt-4 border-t border-border">
+                        <h4 className="font-display font-medium mb-3">Academic Details</h4>
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+                          <div className="p-3 rounded-lg bg-secondary">
+                            <p className="text-muted-foreground text-xs mb-1">Department</p>
+                            <p className="font-medium">{mockStudentData.department}</p>
+                          </div>
+                          <div className="p-3 rounded-lg bg-secondary">
+                            <p className="text-muted-foreground text-xs mb-1">Year</p>
+                            <p className="font-medium">{mockStudentData.year}</p>
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

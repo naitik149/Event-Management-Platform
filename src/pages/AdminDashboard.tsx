@@ -74,7 +74,7 @@ export default function AdminDashboard() {
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row items-start justify-between gap-6">
               <div>
-                <Badge variant="glow" className="mb-4">Club Dashboard</Badge>
+                <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">Club Dashboard</Badge>
                 <h1 className="text-3xl md:text-4xl font-display font-bold mb-2">
                   {mockClubData.name}
                 </h1>
@@ -82,7 +82,7 @@ export default function AdminDashboard() {
                   Manage events, attendance, feedback, and certificates seamlessly.
                 </p>
               </div>
-              <Button variant="hero">
+              <Button>
                 <Plus className="w-4 h-4 mr-2" />
                 Create Event
               </Button>
@@ -92,7 +92,7 @@ export default function AdminDashboard() {
       </section>
 
       {/* Stats */}
-      <section className="py-8 border-b border-border/50">
+      <section className="py-8 border-b border-border">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
@@ -101,13 +101,13 @@ export default function AdminDashboard() {
               { value: mockClubData.averageRating.toFixed(1), label: "Avg Rating", icon: Star },
               { value: "98%", label: "Attendance Rate", icon: CheckCircle },
             ].map((stat, index) => (
-              <Card key={index} variant="feature" className="p-4">
+              <Card key={index} className="p-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <stat.icon className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-2xl font-display font-bold text-gradient">{stat.value}</p>
+                    <p className="text-2xl font-display font-bold text-primary">{stat.value}</p>
                     <p className="text-xs text-muted-foreground">{stat.label}</p>
                   </div>
                 </div>
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <Tabs defaultValue="events" className="space-y-8">
-              <TabsList className="bg-secondary/50 p-1 flex-wrap">
+              <TabsList className="bg-secondary p-1 flex-wrap">
                 <TabsTrigger value="events" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Events
                 </TabsTrigger>
@@ -149,7 +149,7 @@ export default function AdminDashboard() {
 
                 <div className="space-y-4">
                   {mockClubData.events.map((event) => (
-                    <Card key={event.id} variant="glow">
+                    <Card key={event.id} variant="elevated">
                       <CardContent className="pt-6">
                         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                           <div className="flex-1">
@@ -213,7 +213,7 @@ export default function AdminDashboard() {
               {/* QR Attendance Tab */}
               <TabsContent value="qr">
                 <div className="grid md:grid-cols-2 gap-6">
-                  <Card variant="glass">
+                  <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-3">
                         <QrCode className="w-6 h-6 text-primary" />
@@ -246,7 +246,7 @@ export default function AdminDashboard() {
                     </CardContent>
                   </Card>
 
-                  <Card variant="glass">
+                  <Card>
                     <CardHeader>
                       <CardTitle>Attendance Overview</CardTitle>
                       <CardDescription>
@@ -255,7 +255,7 @@ export default function AdminDashboard() {
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
-                        <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50">
+                        <div className="flex items-center justify-between p-4 rounded-lg bg-secondary">
                           <div>
                             <p className="font-display font-medium">Hackathon 2025</p>
                             <p className="text-sm text-muted-foreground">Jan 24, 2025</p>
@@ -281,11 +281,11 @@ export default function AdminDashboard() {
               <TabsContent value="feedback">
                 <div className="grid lg:grid-cols-3 gap-6">
                   {/* Stats */}
-                  <Card variant="feature" className="lg:col-span-3">
+                  <Card className="lg:col-span-3">
                     <CardContent className="pt-6">
                       <div className="grid grid-cols-3 gap-8 text-center">
                         <div>
-                          <p className="text-4xl font-display font-bold text-gradient mb-1">4.6</p>
+                          <p className="text-4xl font-display font-bold text-primary mb-1">4.6</p>
                           <div className="flex justify-center gap-1 mb-2">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <Star
@@ -297,11 +297,11 @@ export default function AdminDashboard() {
                           <p className="text-sm text-muted-foreground">Average Rating</p>
                         </div>
                         <div>
-                          <p className="text-4xl font-display font-bold text-gradient mb-1">85</p>
+                          <p className="text-4xl font-display font-bold text-primary mb-1">85</p>
                           <p className="text-sm text-muted-foreground">Total Feedback</p>
                         </div>
                         <div>
-                          <p className="text-4xl font-display font-bold text-gradient mb-1">87%</p>
+                          <p className="text-4xl font-display font-bold text-primary mb-1">87%</p>
                           <p className="text-sm text-muted-foreground">Response Rate</p>
                         </div>
                       </div>
@@ -310,7 +310,7 @@ export default function AdminDashboard() {
 
                   {/* Recent Feedback */}
                   {mockClubData.recentFeedback.map((feedback, index) => (
-                    <Card key={index} variant="glow">
+                    <Card key={index} variant="elevated">
                       <CardContent className="pt-6">
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex gap-1">
@@ -321,7 +321,7 @@ export default function AdminDashboard() {
                               />
                             ))}
                           </div>
-                          <Badge variant="cyber">{feedback.event}</Badge>
+                          <Badge variant="tech">{feedback.event}</Badge>
                         </div>
                         <p className="text-muted-foreground mb-3">"{feedback.comment}"</p>
                         <p className="text-sm text-muted-foreground">— {feedback.user}</p>
@@ -333,7 +333,7 @@ export default function AdminDashboard() {
 
               {/* Certificates Tab */}
               <TabsContent value="certificates">
-                <Card variant="glass">
+                <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-3">
                       <Award className="w-6 h-6 text-primary" />
@@ -345,7 +345,7 @@ export default function AdminDashboard() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-6">
-                      <Card variant="feature" className="p-4">
+                      <Card className="p-4">
                         <div className="flex items-center justify-between">
                           <div>
                             <h3 className="font-display font-semibold mb-1">Hackathon 2025</h3>
@@ -374,17 +374,14 @@ export default function AdminDashboard() {
                         <h4 className="font-display font-medium">Eligible Students Preview</h4>
                         <div className="max-h-64 overflow-y-auto space-y-2">
                           {["Alex Johnson", "Maria Garcia", "James Chen", "Emma Wilson", "David Kim"].map((student, index) => (
-                            <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+                            <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-secondary">
                               <div className="flex items-center gap-3">
                                 <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm">
                                   {student.charAt(0)}
                                 </div>
                                 <span>{student}</span>
                               </div>
-                              <div className="flex items-center gap-2 text-success text-sm">
-                                <CheckCircle className="w-4 h-4" />
-                                Eligible
-                              </div>
+                              <Badge variant="success">Eligible</Badge>
                             </div>
                           ))}
                         </div>

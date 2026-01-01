@@ -62,7 +62,7 @@ export default function EventDetailsPage() {
   return (
     <Layout>
       {/* Back Navigation */}
-      <section className="py-4 border-b border-border/50">
+      <section className="py-4 border-b border-border">
         <div className="container mx-auto px-4">
           <Button variant="ghost" asChild>
             <Link to="/events">
@@ -78,12 +78,12 @@ export default function EventDetailsPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="flex flex-col md:flex-row items-start gap-6">
-              <div className="w-20 h-20 rounded-xl bg-primary/20 border border-primary/30 flex items-center justify-center text-4xl shrink-0">
+              <div className="w-20 h-20 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-4xl shrink-0">
                 🖥️
               </div>
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3 mb-4">
-                  <Badge variant="cyber">{mockEvent.category}</Badge>
+                  <Badge variant="tech">{mockEvent.category}</Badge>
                   <Badge variant={mockEvent.status === "open" ? "registered" : "pending"}>
                     {mockEvent.status === "open" ? "Registration Open" : "Registration Closed"}
                   </Badge>
@@ -107,7 +107,7 @@ export default function EventDetailsPage() {
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
               {/* About */}
-              <Card variant="glass">
+              <Card>
                 <CardHeader>
                   <CardTitle>About This Event</CardTitle>
                 </CardHeader>
@@ -119,7 +119,7 @@ export default function EventDetailsPage() {
               </Card>
 
               {/* Timeline */}
-              <Card variant="glass">
+              <Card>
                 <CardHeader>
                   <CardTitle>Event Timeline</CardTitle>
                 </CardHeader>
@@ -129,7 +129,7 @@ export default function EventDetailsPage() {
                       <div key={index} className="flex items-start gap-4">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
                           item.completed 
-                            ? "bg-success/20 text-success" 
+                            ? "bg-success/10 text-success" 
                             : "bg-secondary text-muted-foreground"
                         }`}>
                           {item.completed ? (
@@ -138,7 +138,7 @@ export default function EventDetailsPage() {
                             <div className="w-2 h-2 rounded-full bg-current" />
                           )}
                         </div>
-                        <div className="flex-1 pb-4 border-b border-border/50 last:border-0">
+                        <div className="flex-1 pb-4 border-b border-border last:border-0">
                           <p className="font-display font-medium">{item.time}</p>
                           <p className="text-sm text-muted-foreground">{item.date}</p>
                         </div>
@@ -149,7 +149,7 @@ export default function EventDetailsPage() {
               </Card>
 
               {/* Rules */}
-              <Card variant="glass">
+              <Card>
                 <CardHeader>
                   <CardTitle>Rules & Eligibility</CardTitle>
                 </CardHeader>
@@ -174,7 +174,7 @@ export default function EventDetailsPage() {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Event Details Card */}
-              <Card variant="glow" className="sticky top-24">
+              <Card variant="elevated" className="sticky top-24">
                 <CardContent className="pt-6">
                   <div className="space-y-4 mb-6">
                     <div className="flex items-center gap-3 text-muted-foreground">
@@ -211,7 +211,7 @@ export default function EventDetailsPage() {
                     </div>
                   </div>
 
-                  <Button variant="hero" className="w-full mb-4">
+                  <Button className="w-full mb-4">
                     Register Now
                     <ChevronRight className="w-4 h-4 ml-2" />
                   </Button>
@@ -223,7 +223,7 @@ export default function EventDetailsPage() {
               </Card>
 
               {/* What to Expect */}
-              <Card variant="feature">
+              <Card>
                 <CardContent className="pt-6">
                   <h3 className="font-display font-semibold mb-4">What to Expect</h3>
                   <div className="space-y-3">
@@ -243,7 +243,7 @@ export default function EventDetailsPage() {
               </Card>
 
               {/* Contact & Social */}
-              <Card variant="glass">
+              <Card>
                 <CardContent className="pt-6">
                   <h3 className="font-display font-semibold mb-4">Contact & Social</h3>
                   <div className="space-y-3">

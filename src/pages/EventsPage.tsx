@@ -118,7 +118,7 @@ export default function EventsPage() {
       <section className="py-16 bg-gradient-to-b from-primary/10 to-transparent">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <Badge variant="glow" className="mb-6">Events</Badge>
+            <Badge className="mb-6 bg-primary/10 text-primary border-primary/20">Events</Badge>
             <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">
               Upcoming <span className="text-gradient">Events</span>
             </h1>
@@ -130,7 +130,7 @@ export default function EventsPage() {
       </section>
 
       {/* Filters */}
-      <section className="py-8 border-b border-border/50">
+      <section className="py-8 border-b border-border">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             {/* Search */}
@@ -140,7 +140,7 @@ export default function EventsPage() {
                 placeholder="Search events or clubs..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-secondary/50 border-border/50 focus:border-primary"
+                className="pl-10 bg-secondary border-border focus:border-primary"
               />
             </div>
 
@@ -172,11 +172,11 @@ export default function EventsPage() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredEvents.map((event) => (
-                <Card key={event.id} variant="glow" className="group overflow-hidden">
+                <Card key={event.id} variant="elevated" className="group overflow-hidden">
                   {/* Event Header */}
                   <div className="p-6 pb-0">
                     <div className="flex items-start justify-between mb-4">
-                      <div className="w-14 h-14 rounded-lg bg-primary/20 border border-primary/30 flex items-center justify-center text-2xl group-hover:glow-primary transition-all duration-300">
+                      <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-2xl group-hover:scale-105 transition-transform duration-300">
                         {event.image}
                       </div>
                       <Badge variant={event.status === "open" ? "registered" : "pending"}>
@@ -211,7 +211,7 @@ export default function EventsPage() {
                       </div>
 
                       {/* Contact Details */}
-                      <div className="mb-4 p-3 rounded-lg bg-secondary/30 border border-border/30">
+                      <div className="mb-4 p-3 rounded-lg bg-secondary border border-border">
                         <p className="text-xs text-muted-foreground mb-2 font-medium">Contact & Social</p>
                         <div className="space-y-1.5">
                           <a href={`mailto:${event.contact.email}`} className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors">

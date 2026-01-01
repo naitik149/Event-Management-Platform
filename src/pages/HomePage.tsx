@@ -140,21 +140,19 @@ export default function HomePage() {
               </Button>
             </div>
 
-            {/* Stats */}
-            <div className="flex flex-wrap items-center justify-center gap-8 mt-16 animate-fade-in animation-delay-600">
-              <div className="text-center">
-                <div className="text-3xl font-display font-bold text-foreground">500+</div>
-                <div className="text-sm text-muted-foreground">Events Hosted</div>
+            {/* Platform Highlights */}
+            <div className="flex flex-wrap items-center justify-center gap-6 mt-16 animate-fade-in animation-delay-600">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-success/10 border border-success/20">
+                <CheckCircle2 className="w-4 h-4 text-success" />
+                <span className="text-sm font-medium text-success">QR Attendance</span>
               </div>
-              <div className="w-px h-12 bg-border hidden sm:block" />
-              <div className="text-center">
-                <div className="text-3xl font-display font-bold text-foreground">10K+</div>
-                <div className="text-sm text-muted-foreground">Students Active</div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
+                <Award className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium text-primary">Auto Certificates</span>
               </div>
-              <div className="w-px h-12 bg-border hidden sm:block" />
-              <div className="text-center">
-                <div className="text-3xl font-display font-bold text-foreground">50+</div>
-                <div className="text-sm text-muted-foreground">Clubs Registered</div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20">
+                <Bell className="w-4 h-4 text-accent" />
+                <span className="text-sm font-medium text-accent">Smart Reminders</span>
               </div>
             </div>
           </div>
@@ -298,7 +296,7 @@ export default function HomePage() {
               Ready to Transform Your Campus Experience?
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join thousands of students already discovering events, building connections, and earning certificates.
+              Start discovering events, building connections, and earning certificates — all for free.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button size="lg" className="rounded-full px-8 shadow-medium" asChild>

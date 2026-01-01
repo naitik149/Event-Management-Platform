@@ -13,17 +13,19 @@ const badgeVariants = cva(
         secondary:
           "border-transparent bg-secondary text-secondary-foreground",
         destructive:
-          "border-transparent bg-destructive text-destructive-foreground",
+          "border-destructive/20 bg-destructive/10 text-destructive",
         success:
-          "border-transparent bg-success text-success-foreground",
+          "border-success/20 bg-success/10 text-success",
         warning:
-          "border-transparent bg-warning text-warning-foreground",
+          "border-warning/20 bg-warning/10 text-warning",
         outline: "text-foreground border-border",
-        glow: "border-primary/50 bg-primary/20 text-primary glow-primary",
-        cyber: "border-primary/30 bg-primary/10 text-primary",
-        pending: "border-warning/50 bg-warning/20 text-warning",
-        completed: "border-success/50 bg-success/20 text-success",
-        registered: "border-primary/50 bg-primary/20 text-primary",
+        accent: "border-accent/20 bg-accent/10 text-accent",
+        pending: "border-warning/20 bg-warning/10 text-warning",
+        completed: "border-success/20 bg-success/10 text-success",
+        registered: "border-primary/20 bg-primary/10 text-primary",
+        tech: "border-primary/20 bg-primary/10 text-primary",
+        cultural: "border-accent/20 bg-accent/10 text-accent",
+        sports: "border-success/20 bg-success/10 text-success",
       },
     },
     defaultVariants: {

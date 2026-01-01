@@ -75,7 +75,7 @@ export default function CalendarPage() {
       <section className="py-16 bg-gradient-to-b from-primary/10 to-transparent">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <Badge variant="glow" className="mb-6">Calendar</Badge>
+            <Badge className="mb-6 bg-primary/10 text-primary border-primary/20">Calendar</Badge>
             <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">
               Event <span className="text-gradient">Calendar</span>
             </h1>
@@ -89,9 +89,9 @@ export default function CalendarPage() {
       {/* Calendar */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <Card variant="glass" className="max-w-5xl mx-auto overflow-hidden">
+          <Card className="max-w-5xl mx-auto overflow-hidden">
             {/* Calendar Header */}
-            <CardHeader className="bg-secondary/30 border-b border-border/50">
+            <CardHeader className="bg-secondary border-b border-border">
               <div className="flex items-center justify-between">
                 <Button variant="ghost" size="icon" onClick={() => navigateMonth(-1)}>
                   <ChevronLeft className="w-5 h-5" />
@@ -127,9 +127,9 @@ export default function CalendarPage() {
                       key={index}
                       className={`min-h-20 md:min-h-28 p-1 md:p-2 rounded-lg border transition-all duration-300 ${
                         day.isCurrentMonth
-                          ? "bg-card/50 border-border/50 hover:border-primary/50"
+                          ? "bg-card border-border hover:border-primary/50"
                           : "bg-secondary/20 border-transparent"
-                      } ${isToday ? "border-primary glow-primary" : ""}`}
+                      } ${isToday ? "border-primary shadow-soft" : ""}`}
                     >
                       <div className={`text-sm font-display mb-1 ${
                         day.isCurrentMonth ? "text-foreground" : "text-muted-foreground/50"
@@ -141,7 +141,7 @@ export default function CalendarPage() {
                         {events.slice(0, 2).map((event, eventIndex) => (
                           <div
                             key={eventIndex}
-                            className="text-xs p-1 rounded bg-primary/20 text-primary truncate cursor-pointer hover:bg-primary/30 transition-colors"
+                            className="text-xs p-1 rounded bg-primary/10 text-primary truncate cursor-pointer hover:bg-primary/20 transition-colors"
                             title={event.title}
                           >
                             {event.title}
@@ -165,9 +165,9 @@ export default function CalendarPage() {
             <h2 className="text-xl font-display font-semibold mb-6">Upcoming This Month</h2>
             <div className="grid md:grid-cols-2 gap-4">
               {mockEvents.map((event, index) => (
-                <Card key={index} variant="glow" className="p-4">
+                <Card key={index} variant="elevated" className="p-4">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-primary/20 border border-primary/30 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
                       <CalendarIcon className="w-5 h-5 text-primary" />
                     </div>
                     <div className="flex-1">

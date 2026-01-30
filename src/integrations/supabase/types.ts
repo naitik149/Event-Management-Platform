@@ -58,7 +58,7 @@ export type Database = {
           category: string
           club_id: string
           created_at: string
-          created_by: string
+          created_by: string | null
           description: string | null
           event_date: string
           event_time: string
@@ -74,7 +74,7 @@ export type Database = {
           category: string
           club_id: string
           created_at?: string
-          created_by: string
+          created_by?: string | null
           description?: string | null
           event_date: string
           event_time: string
@@ -90,7 +90,7 @@ export type Database = {
           category?: string
           club_id?: string
           created_at?: string
-          created_by?: string
+          created_by?: string | null
           description?: string | null
           event_date?: string
           event_time?: string

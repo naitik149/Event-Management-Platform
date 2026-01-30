@@ -12,16 +12,16 @@ const months = [
 ];
 
 const mockEvents = [
-  { date: "2026-01-24", title: "Hackathon 2026", club: "Coding Club", color: "primary" },
-  { date: "2026-01-28", title: "AI Workshop", club: "AI Society", color: "primary" },
-  { date: "2026-02-05", title: "Cultural Fest", club: "Cultural Committee", color: "warning" },
-  { date: "2026-02-10", title: "Pitch Competition", club: "E-Cell", color: "success" },
-  { date: "2026-02-15", title: "Photography Walk", club: "Photography Club", color: "primary" },
-  { date: "2026-02-20", title: "Web Dev Bootcamp", club: "DSC", color: "primary" },
+  { date: "2026-02-24", title: "Hackathon 2026", club: "Coding Club", color: "primary" },
+  { date: "2026-02-28", title: "AI Workshop", club: "AI Society", color: "primary" },
+  { date: "2026-03-05", title: "Cultural Fest", club: "Cultural Committee", color: "warning" },
+  { date: "2026-03-10", title: "Pitch Competition", club: "E-Cell", color: "success" },
+  { date: "2026-03-15", title: "Photography Walk", club: "Photography Club", color: "primary" },
+  { date: "2026-03-20", title: "Web Dev Bootcamp", club: "DSC", color: "primary" },
 ];
 
 export default function CalendarPage() {
-  const [currentDate, setCurrentDate] = useState(new Date(2026, 0, 1));
+  const [currentDate, setCurrentDate] = useState(new Date(2026, 1, 1));
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();

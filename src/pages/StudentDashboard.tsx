@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,100 +12,59 @@ import {
   QrCode,
   Award,
   MessageSquare,
-  Star,
   Download,
   CheckCircle,
   AlertCircle,
   Lock,
   Settings,
   User,
-  Mail,
-  Phone,
   Save,
+  Loader2,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-const mockStudentData = {
-  name: "Alex Johnson",
-  email: "alex.johnson@college.edu",
-  phone: "+91 98765 00000",
-  studentId: "STU2024001",
-  department: "Computer Science",
-  year: "3rd Year",
-  registeredEvents: [
-    {
-      id: 1,
-      title: "Hackathon 2025: Code the Future",
-      club: "Coding Club",
-      date: "Jan 24, 2025",
-      time: "10:00 AM",
-      venue: "Main Auditorium",
-      status: "completed",
-      attended: true,
-      feedbackSubmitted: true,
-      certificateAvailable: true,
-    },
-    {
-      id: 2,
-      title: "AI & Machine Learning Workshop",
-      club: "AI Society",
-      date: "Jan 28, 2025",
-      time: "2:00 PM",
-      venue: "Tech Lab 201",
-      status: "attended",
-      attended: true,
-      feedbackSubmitted: false,
-      certificateAvailable: false,
-    },
-    {
-      id: 3,
-      title: "Startup Pitch Competition",
-      club: "E-Cell",
-      date: "Feb 10, 2025",
-      time: "11:00 AM",
-      venue: "Seminar Hall",
-      status: "registered",
-      attended: false,
-      feedbackSubmitted: false,
-      certificateAvailable: false,
-    },
-    {
-      id: 4,
-      title: "Web Development Bootcamp",
-      club: "Developer Students Club",
-      date: "Feb 20, 2025",
-      time: "10:00 AM",
-      venue: "Computer Lab 3",
-      status: "registered",
-      attended: false,
-      feedbackSubmitted: false,
-      certificateAvailable: false,
-    },
-  ],
-};
-
-const statusConfig: Record<string, { label: string; variant: "registered" | "pending" | "completed" | "warning" }> = {
-  registered: { label: "Registered", variant: "registered" },
-  attended: { label: "Feedback Pending", variant: "pending" },
-  completed: { label: "Completed", variant: "completed" },
-};
+import { useAuth } from "@/contexts/AuthContext";
+import { useMyRegistrations } from "@/hooks/useRegistrations";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { format, parseISO } from "date-fns";
 
 export default function StudentDashboard() {
-  const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
+  const { user, profile, role, isAdmin, isClubAdmin } = useAuth();
+  const { data: registrations, isLoading: isLoadingRegistrations } = useMyRegistrations();
+
   const [profileData, setProfileData] = useState({
-    name: mockStudentData.name,
-    email: mockStudentData.email,
-    phone: mockStudentData.phone,
+    full_name: profile?.full_name || "",
+    email: profile?.email || "",
+    phone: profile?.phone || "",
   });
+  const [isSaving, setIsSaving] = useState(false);
 
-  const completedEvents = mockStudentData.registeredEvents.filter(e => e.status === "completed");
-  const upcomingEvents = mockStudentData.registeredEvents.filter(e => e.status === "registered");
-  const pendingFeedback = mockStudentData.registeredEvents.filter(e => e.status === "attended");
+  // Redirect admins to admin dashboard
+  if (isAdmin || isClubAdmin) {
+    return <Navigate to="/admin" replace />;
+  }
 
-  const handleProfileSave = () => {
-    // Mock save - in real app this would call an API
-    console.log("Profile saved:", profileData);
+  const upcomingEvents = registrations?.filter((r: any) => r.status === "registered") ?? [];
+
+  const handleProfileSave = async () => {
+    if (!user) return;
+    setIsSaving(true);
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        full_name: profileData.full_name,
+        phone: profileData.phone,
+      })
+      .eq("user_id", user.id);
+
+    if (error) {
+      toast.error("Failed to update profile");
+    } else {
+      toast.success("Profile updated successfully");
+    }
+    setIsSaving(false);
   };
 
   return (
@@ -130,8 +89,8 @@ export default function StudentDashboard() {
                     👨‍🎓
                   </div>
                   <div>
-                    <p className="font-display font-semibold">{mockStudentData.name}</p>
-                    <p className="text-sm text-muted-foreground">{mockStudentData.email}</p>
+                    <p className="font-display font-semibold">{profile?.full_name || "Student"}</p>
+                    <p className="text-sm text-muted-foreground">{profile?.email}</p>
                   </div>
                 </div>
               </Card>
@@ -145,10 +104,10 @@ export default function StudentDashboard() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { value: mockStudentData.registeredEvents.length, label: "Total Events", icon: Calendar },
-              { value: completedEvents.length, label: "Completed", icon: CheckCircle },
-              { value: pendingFeedback.length, label: "Pending Feedback", icon: MessageSquare },
-              { value: completedEvents.length, label: "Certificates", icon: Award },
+              { value: registrations?.length ?? 0, label: "Total Events", icon: Calendar },
+              { value: 0, label: "Completed", icon: CheckCircle },
+              { value: 0, label: "Pending Feedback", icon: MessageSquare },
+              { value: 0, label: "Certificates", icon: Award },
             ].map((stat, index) => (
               <Card key={index} className="p-4">
                 <div className="flex items-center gap-4">
@@ -189,61 +148,61 @@ export default function StudentDashboard() {
 
               {/* My Events Tab */}
               <TabsContent value="events" className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  {mockStudentData.registeredEvents.map((event) => (
-                    <Card key={event.id} variant="elevated" className="group">
-                      <CardContent className="pt-6">
-                        <div className="flex items-start justify-between mb-4">
-                          <Badge variant={statusConfig[event.status].variant}>
-                            {statusConfig[event.status].label}
-                          </Badge>
-                          {event.attended && (
-                            <CheckCircle className="w-5 h-5 text-success" />
-                          )}
-                        </div>
-                        <h3 className="text-lg font-display font-semibold mb-2 group-hover:text-primary transition-colors">
-                          {event.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          {event.club}
-                        </p>
-                        <div className="space-y-2 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4 text-primary" />
-                            <span>{event.date}</span>
-                            <Clock className="w-4 h-4 text-primary ml-2" />
-                            <span>{event.time}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <MapPin className="w-4 h-4 text-primary" />
-                            <span>{event.venue}</span>
-                          </div>
-                        </div>
-
-                        {event.status === "attended" && (
-                          <div className="mt-4 p-3 rounded-lg bg-warning/10 border border-warning/30">
-                            <p className="text-sm text-warning flex items-center gap-2">
-                              <AlertCircle className="w-4 h-4" />
-                              Submit feedback to unlock certificate
+                {isLoadingRegistrations ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                  </div>
+                ) : upcomingEvents.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Calendar className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                    <h3 className="text-lg font-display font-semibold mb-2">No registered events</h3>
+                    <p className="text-muted-foreground mb-4">Browse events and register to get started!</p>
+                    <Button asChild>
+                      <Link to="/events">Browse Events</Link>
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {upcomingEvents.map((registration: any) => {
+                      const event = registration.event;
+                      if (!event) return null;
+                      
+                      return (
+                        <Card key={registration.id} variant="elevated" className="group">
+                          <CardContent className="pt-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <Badge variant="registered">Registered</Badge>
+                            </div>
+                            <h3 className="text-lg font-display font-semibold mb-2 group-hover:text-primary transition-colors">
+                              {event.title}
+                            </h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              {event.club_name}
                             </p>
-                          </div>
-                        )}
+                            <div className="space-y-2 text-sm text-muted-foreground">
+                              <div className="flex items-center gap-2">
+                                <Calendar className="w-4 h-4 text-primary" />
+                                <span>{format(parseISO(event.event_date), "MMM d, yyyy")}</span>
+                                <Clock className="w-4 h-4 text-primary ml-2" />
+                                <span>{format(new Date(`2000-01-01T${event.event_time}`), "h:mm a")}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <MapPin className="w-4 h-4 text-primary" />
+                                <span>{event.venue}</span>
+                              </div>
+                            </div>
 
-                        <div className="mt-6 flex gap-3">
-                          <Button variant="outline" size="sm" asChild className="flex-1">
-                            <Link to={`/events/${event.id}`}>View Details</Link>
-                          </Button>
-                          {event.status === "attended" && (
-                            <Button variant="default" size="sm" className="flex-1">
-                              <MessageSquare className="w-4 h-4 mr-2" />
-                              Submit Feedback
-                            </Button>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                            <div className="mt-6 flex gap-3">
+                              <Button variant="outline" size="sm" asChild className="flex-1">
+                                <Link to={`/events/${event.id}`}>View Details</Link>
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                )}
               </TabsContent>
 
               {/* QR Attendance Tab */}
@@ -266,20 +225,10 @@ export default function StudentDashboard() {
                       <p className="text-muted-foreground mb-6">
                         Scan the QR code displayed at the event venue to mark your attendance.
                       </p>
-                      <Button variant="default">
+                      <Button variant="default" disabled>
                         <QrCode className="w-4 h-4 mr-2" />
-                        Open QR Scanner
+                        QR Scanner (Coming Soon)
                       </Button>
-                    </div>
-
-                    <div className="mt-8 p-4 rounded-lg bg-success/10 border border-success/30">
-                      <div className="flex items-center gap-3">
-                        <CheckCircle className="w-5 h-5 text-success" />
-                        <div>
-                          <p className="font-display font-medium text-success">Attendance Marked</p>
-                          <p className="text-sm text-muted-foreground">Hackathon 2025 - Jan 24, 2025</p>
-                        </div>
-                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -287,60 +236,12 @@ export default function StudentDashboard() {
 
               {/* Certificates Tab */}
               <TabsContent value="certificates">
-                <div className="grid md:grid-cols-2 gap-6">
-                  {mockStudentData.registeredEvents.map((event) => (
-                    <Card key={event.id} variant={event.certificateAvailable ? "elevated" : "default"}>
-                      <CardContent className="pt-6">
-                        <div className="flex items-start gap-4">
-                          <div className={`w-14 h-14 rounded-lg flex items-center justify-center ${
-                            event.certificateAvailable 
-                              ? "bg-primary/10 border border-primary/20"
-                              : "bg-secondary border border-border"
-                          }`}>
-                            {event.certificateAvailable ? (
-                              <Award className="w-7 h-7 text-primary" />
-                            ) : (
-                              <Lock className="w-7 h-7 text-muted-foreground" />
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-display font-semibold mb-1">{event.title}</h3>
-                            <p className="text-sm text-muted-foreground mb-4">{event.club}</p>
-                            
-                            {event.certificateAvailable ? (
-                              <Button variant="default" size="sm">
-                                <Download className="w-4 h-4 mr-2" />
-                                Download Certificate
-                              </Button>
-                            ) : (
-                              <div className="space-y-2">
-                                <div className="flex items-center gap-2 text-sm">
-                                  {event.attended ? (
-                                    <CheckCircle className="w-4 h-4 text-success" />
-                                  ) : (
-                                    <div className="w-4 h-4 rounded-full border border-muted-foreground" />
-                                  )}
-                                  <span className={event.attended ? "text-success" : "text-muted-foreground"}>
-                                    Attendance marked
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm">
-                                  {event.feedbackSubmitted ? (
-                                    <CheckCircle className="w-4 h-4 text-success" />
-                                  ) : (
-                                    <div className="w-4 h-4 rounded-full border border-muted-foreground" />
-                                  )}
-                                  <span className={event.feedbackSubmitted ? "text-success" : "text-muted-foreground"}>
-                                    Feedback submitted
-                                  </span>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                <div className="text-center py-12">
+                  <Award className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                  <h3 className="text-lg font-display font-semibold mb-2">No certificates yet</h3>
+                  <p className="text-muted-foreground">
+                    Complete events and submit feedback to unlock certificates.
+                  </p>
                 </div>
               </TabsContent>
 
@@ -360,8 +261,8 @@ export default function StudentDashboard() {
                         <Label htmlFor="name">Full Name</Label>
                         <Input
                           id="name"
-                          value={profileData.name}
-                          onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
+                          value={profileData.full_name}
+                          onChange={(e) => setProfileData((prev) => ({ ...prev, full_name: e.target.value }))}
                           className="bg-secondary border-border"
                         />
                       </div>
@@ -371,9 +272,10 @@ export default function StudentDashboard() {
                           id="email"
                           type="email"
                           value={profileData.email}
-                          onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
-                          className="bg-secondary border-border"
+                          disabled
+                          className="bg-secondary border-border opacity-50"
                         />
+                        <p className="text-xs text-muted-foreground">Email cannot be changed</p>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="phone">Phone Number</Label>
@@ -381,12 +283,16 @@ export default function StudentDashboard() {
                           id="phone"
                           type="tel"
                           value={profileData.phone}
-                          onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
+                          onChange={(e) => setProfileData((prev) => ({ ...prev, phone: e.target.value }))}
                           className="bg-secondary border-border"
                         />
                       </div>
-                      <Button onClick={handleProfileSave} className="w-full">
-                        <Save className="w-4 h-4 mr-2" />
+                      <Button onClick={handleProfileSave} className="w-full" disabled={isSaving}>
+                        {isSaving ? (
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        ) : (
+                          <Save className="w-4 h-4 mr-2" />
+                        )}
                         Save Changes
                       </Button>
                     </CardContent>
@@ -402,40 +308,16 @@ export default function StudentDashboard() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="p-4 rounded-lg bg-secondary">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                            <User className="w-5 h-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="font-display font-medium">{mockStudentData.name}</p>
-                            <p className="text-xs text-muted-foreground">{mockStudentData.studentId}</p>
-                          </div>
-                        </div>
+                        <p className="text-sm text-muted-foreground mb-1">Account Type</p>
+                        <p className="font-display font-medium capitalize">{role || "Student"}</p>
                       </div>
-
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary">
-                          <Mail className="w-4 h-4 text-primary" />
-                          <span className="text-sm">{mockStudentData.email}</span>
-                        </div>
-                        <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary">
-                          <Phone className="w-4 h-4 text-primary" />
-                          <span className="text-sm">{mockStudentData.phone}</span>
-                        </div>
-                      </div>
-
-                      <div className="pt-4 border-t border-border">
-                        <h4 className="font-display font-medium mb-3">Academic Details</h4>
-                        <div className="grid grid-cols-2 gap-3 text-sm">
-                          <div className="p-3 rounded-lg bg-secondary">
-                            <p className="text-muted-foreground text-xs mb-1">Department</p>
-                            <p className="font-medium">{mockStudentData.department}</p>
-                          </div>
-                          <div className="p-3 rounded-lg bg-secondary">
-                            <p className="text-muted-foreground text-xs mb-1">Year</p>
-                            <p className="font-medium">{mockStudentData.year}</p>
-                          </div>
-                        </div>
+                      <div className="p-4 rounded-lg bg-secondary">
+                        <p className="text-sm text-muted-foreground mb-1">Member Since</p>
+                        <p className="font-display font-medium">
+                          {profile?.created_at
+                            ? format(parseISO(profile.created_at), "MMMM d, yyyy")
+                            : "N/A"}
+                        </p>
                       </div>
                     </CardContent>
                   </Card>

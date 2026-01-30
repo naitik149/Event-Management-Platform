@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,46 +18,75 @@ import {
   Instagram,
   Mail,
   Phone,
+  Loader2,
 } from "lucide-react";
-
-const mockEvent = {
-  id: 1,
-  title: "Hackathon 2025: Code the Future",
-  club: "Coding Club",
-  date: "Jan 24, 2025",
-  time: "10:00 AM - 6:00 PM",
-  venue: "Main Auditorium",
-  seats: { filled: 120, total: 150 },
-  status: "open",
-  category: "Technical",
-  description: `Join us for the most anticipated coding event of the year! Hackathon 2025 brings together the brightest minds to solve real-world problems through code.
-
-Whether you're a beginner or an experienced developer, this is your chance to collaborate, learn, and create something amazing in just 8 hours.
-
-Prizes worth ₹50,000 to be won! Free food, swag, and networking opportunities included.`,
-  rules: [
-    "Team size: 2-4 members",
-    "All code must be written during the event",
-    "Use of open-source libraries is allowed",
-    "Projects must be submitted before the deadline",
-    "Plagiarism will result in disqualification",
-  ],
-  timeline: [
-    { time: "Registration Opens", date: "Jan 20, 2025", completed: true },
-    { time: "Event Day", date: "Jan 24, 2025", completed: false },
-    { time: "QR Attendance Scan", date: "Jan 24, 2025 - 10:00 AM", completed: false },
-    { time: "Feedback Submission", date: "Jan 24, 2025 - 6:30 PM", completed: false },
-    { time: "Certificate Unlock", date: "After Feedback", completed: false },
-  ],
-  contact: {
-    email: "codingclub@college.edu",
-    phone: "+91 98765 43210",
-    instagram: "@codingclub_official",
-  },
-};
+import { useEvent } from "@/hooks/useEvents";
+import { useIsRegistered, useRegisterForEvent, useCancelRegistration } from "@/hooks/useRegistrations";
+import { useAuth } from "@/contexts/AuthContext";
+import { format, parseISO } from "date-fns";
+import { toast } from "sonner";
 
 export default function EventDetailsPage() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  
+  const { data: event, isLoading, error } = useEvent(id || "");
+  const { data: isRegistered, isLoading: isCheckingRegistration } = useIsRegistered(id || "");
+  const registerMutation = useRegisterForEvent();
+  const cancelMutation = useCancelRegistration();
+
+  const handleRegister = async () => {
+    if (!user) {
+      toast.error("Please log in to register for events");
+      navigate("/login", { state: { from: { pathname: `/events/${id}` } } });
+      return;
+    }
+
+    try {
+      await registerMutation.mutateAsync(id!);
+      toast.success("Successfully registered for the event!");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to register");
+    }
+  };
+
+  const handleCancelRegistration = async () => {
+    try {
+      await cancelMutation.mutateAsync(id!);
+      toast.success("Registration cancelled");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to cancel registration");
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error || !event) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+          <p className="text-xl text-muted-foreground">Event not found</p>
+          <Button asChild>
+            <Link to="/events">Back to Events</Link>
+          </Button>
+        </div>
+      </Layout>
+    );
+  }
+
+  const formattedDate = format(parseISO(event.event_date), "MMMM d, yyyy");
+  const formattedTime = format(new Date(`2000-01-01T${event.event_time}`), "h:mm a");
+  const fillPercentage = Math.round((event.filled_seats / event.total_seats) * 100);
+  const isFull = event.filled_seats >= event.total_seats;
 
   return (
     <Layout>
@@ -79,20 +108,26 @@ export default function EventDetailsPage() {
           <div className="max-w-4xl mx-auto">
             <div className="flex flex-col md:flex-row items-start gap-6">
               <div className="w-20 h-20 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-4xl shrink-0">
-                🖥️
+                {event.image_emoji || "📅"}
               </div>
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3 mb-4">
-                  <Badge variant="tech">{mockEvent.category}</Badge>
-                  <Badge variant={mockEvent.status === "open" ? "registered" : "pending"}>
-                    {mockEvent.status === "open" ? "Registration Open" : "Registration Closed"}
+                  <Badge variant="tech">{event.category}</Badge>
+                  <Badge variant={event.status === "open" ? "registered" : "pending"}>
+                    {event.status === "open" ? "Registration Open" : event.status === "closed" ? "Closed" : "Cancelled"}
                   </Badge>
+                  {isRegistered && (
+                    <Badge variant="completed">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Registered
+                    </Badge>
+                  )}
                 </div>
                 <h1 className="text-3xl md:text-4xl font-display font-bold mb-4">
-                  {mockEvent.title}
+                  {event.title}
                 </h1>
                 <p className="text-lg text-muted-foreground">
-                  Organized by <span className="text-primary">{mockEvent.club}</span>
+                  Organized by <span className="text-primary">{event.club_name}</span>
                 </p>
               </div>
             </div>
@@ -113,7 +148,7 @@ export default function EventDetailsPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground whitespace-pre-line">
-                    {mockEvent.description}
+                    {event.description || "No description available for this event."}
                   </p>
                 </CardContent>
               </Card>
@@ -121,11 +156,17 @@ export default function EventDetailsPage() {
               {/* Timeline */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Event Timeline</CardTitle>
+                  <CardTitle>Event Flow</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {mockEvent.timeline.map((item, index) => (
+                    {[
+                      { time: "Registration", date: "Register now to secure your spot", completed: isRegistered },
+                      { time: "Event Day", date: formattedDate, completed: false },
+                      { time: "QR Attendance", date: "Scan QR at the venue", completed: false },
+                      { time: "Feedback", date: "Submit feedback after event", completed: false },
+                      { time: "Certificate", date: "Unlock after feedback", completed: false },
+                    ].map((item, index) => (
                       <div key={index} className="flex items-start gap-4">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
                           item.completed 
@@ -148,21 +189,10 @@ export default function EventDetailsPage() {
                 </CardContent>
               </Card>
 
-              {/* Rules */}
+              {/* Note */}
               <Card>
-                <CardHeader>
-                  <CardTitle>Rules & Eligibility</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {mockEvent.rules.map((rule, index) => (
-                      <li key={index} className="flex items-start gap-3 text-muted-foreground">
-                        <ChevronRight className="w-4 h-4 text-primary shrink-0 mt-1" />
-                        <span>{rule}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-6 p-4 rounded-lg bg-warning/10 border border-warning/30">
+                <CardContent className="pt-6">
+                  <div className="p-4 rounded-lg bg-warning/10 border border-warning/30">
                     <p className="text-sm text-warning">
                       <strong>Note:</strong> Certificates are issued only after attendance verification and feedback submission.
                     </p>
@@ -179,19 +209,19 @@ export default function EventDetailsPage() {
                   <div className="space-y-4 mb-6">
                     <div className="flex items-center gap-3 text-muted-foreground">
                       <Calendar className="w-5 h-5 text-primary" />
-                      <span>{mockEvent.date}</span>
+                      <span>{formattedDate}</span>
                     </div>
                     <div className="flex items-center gap-3 text-muted-foreground">
                       <Clock className="w-5 h-5 text-primary" />
-                      <span>{mockEvent.time}</span>
+                      <span>{formattedTime}</span>
                     </div>
                     <div className="flex items-center gap-3 text-muted-foreground">
                       <MapPin className="w-5 h-5 text-primary" />
-                      <span>{mockEvent.venue}</span>
+                      <span>{event.venue}</span>
                     </div>
                     <div className="flex items-center gap-3 text-muted-foreground">
                       <Users className="w-5 h-5 text-primary" />
-                      <span>{mockEvent.seats.filled} / {mockEvent.seats.total} registered</span>
+                      <span>{event.filled_seats} / {event.total_seats} registered</span>
                     </div>
                   </div>
 
@@ -199,25 +229,58 @@ export default function EventDetailsPage() {
                   <div className="mb-6">
                     <div className="flex justify-between text-sm mb-2">
                       <span className="text-muted-foreground">Seats Filled</span>
-                      <span className="text-primary font-display">
-                        {Math.round((mockEvent.seats.filled / mockEvent.seats.total) * 100)}%
-                      </span>
+                      <span className="text-primary font-display">{fillPercentage}%</span>
                     </div>
                     <div className="h-2 rounded-full bg-secondary overflow-hidden">
                       <div
                         className="h-full bg-primary rounded-full transition-all duration-500"
-                        style={{ width: `${(mockEvent.seats.filled / mockEvent.seats.total) * 100}%` }}
+                        style={{ width: `${Math.min(fillPercentage, 100)}%` }}
                       />
                     </div>
                   </div>
 
-                  <Button className="w-full mb-4">
-                    Register Now
-                    <ChevronRight className="w-4 h-4 ml-2" />
-                  </Button>
+                  {isCheckingRegistration ? (
+                    <Button className="w-full mb-4" disabled>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Checking...
+                    </Button>
+                  ) : isRegistered ? (
+                    <Button
+                      variant="outline"
+                      className="w-full mb-4"
+                      onClick={handleCancelRegistration}
+                      disabled={cancelMutation.isPending}
+                    >
+                      {cancelMutation.isPending ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      ) : (
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                      )}
+                      Cancel Registration
+                    </Button>
+                  ) : (
+                    <Button
+                      className="w-full mb-4"
+                      onClick={handleRegister}
+                      disabled={event.status !== "open" || isFull || registerMutation.isPending}
+                    >
+                      {registerMutation.isPending ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      ) : isFull ? (
+                        "Event Full"
+                      ) : event.status !== "open" ? (
+                        "Registration Closed"
+                      ) : (
+                        <>
+                          Register Now
+                          <ChevronRight className="w-4 h-4 ml-2" />
+                        </>
+                      )}
+                    </Button>
+                  )}
 
                   <p className="text-xs text-center text-muted-foreground">
-                    You'll receive reminders before the event.
+                    {user ? "You'll receive reminders before the event." : "Log in to register for this event."}
                   </p>
                 </CardContent>
               </Card>
@@ -243,36 +306,44 @@ export default function EventDetailsPage() {
               </Card>
 
               {/* Contact & Social */}
-              <Card>
-                <CardContent className="pt-6">
-                  <h3 className="font-display font-semibold mb-4">Contact & Social</h3>
-                  <div className="space-y-3">
-                    <a 
-                      href={`mailto:${mockEvent.contact.email}`} 
-                      className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Mail className="w-4 h-4 text-primary" />
-                      <span>{mockEvent.contact.email}</span>
-                    </a>
-                    <a 
-                      href={`tel:${mockEvent.contact.phone}`} 
-                      className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Phone className="w-4 h-4 text-primary" />
-                      <span>{mockEvent.contact.phone}</span>
-                    </a>
-                    <a 
-                      href={`https://instagram.com/${mockEvent.contact.instagram.replace('@', '')}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Instagram className="w-4 h-4 text-primary" />
-                      <span>{mockEvent.contact.instagram}</span>
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
+              {(event.club_email || event.club_phone || event.club_instagram) && (
+                <Card>
+                  <CardContent className="pt-6">
+                    <h3 className="font-display font-semibold mb-4">Contact & Social</h3>
+                    <div className="space-y-3">
+                      {event.club_email && (
+                        <a 
+                          href={`mailto:${event.club_email}`} 
+                          className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <Mail className="w-4 h-4 text-primary" />
+                          <span>{event.club_email}</span>
+                        </a>
+                      )}
+                      {event.club_phone && (
+                        <a 
+                          href={`tel:${event.club_phone}`} 
+                          className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <Phone className="w-4 h-4 text-primary" />
+                          <span>{event.club_phone}</span>
+                        </a>
+                      )}
+                      {event.club_instagram && (
+                        <a 
+                          href={`https://instagram.com/${event.club_instagram.replace('@', '')}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <Instagram className="w-4 h-4 text-primary" />
+                          <span>{event.club_instagram}</span>
+                        </a>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </div>
         </div>

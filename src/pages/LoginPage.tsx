@@ -1,16 +1,65 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Zap, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { Zap, Mail, Lock, User, ArrowRight, Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("login");
+
+  const { user, signIn, signUp } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/dashboard";
+
+  useEffect(() => {
+    if (user) {
+      navigate(from, { replace: true });
+    }
+  }, [user, navigate, from]);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const { error } = await signIn(email, password);
+
+    if (error) {
+      toast.error(error.message || "Failed to sign in");
+    } else {
+      toast.success("Welcome back!");
+      navigate(from, { replace: true });
+    }
+
+    setIsLoading(false);
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const { error } = await signUp(email, password, fullName);
+
+    if (error) {
+      toast.error(error.message || "Failed to create account");
+    } else {
+      toast.success("Account created! Please check your email to verify your account.");
+      setActiveTab("login");
+    }
+
+    setIsLoading(false);
+  };
 
   return (
     <Layout showFooter={false}>
@@ -31,7 +80,7 @@ export default function LoginPage() {
             </div>
 
             <Card className="overflow-hidden">
-              <Tabs defaultValue="login">
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="w-full rounded-none bg-secondary p-0">
                   <TabsTrigger
                     value="login"
@@ -49,122 +98,123 @@ export default function LoginPage() {
 
                 {/* Login Form */}
                 <TabsContent value="login" className="mt-0">
-                  <CardHeader className="text-center">
-                    <CardTitle className="text-2xl">Welcome Back</CardTitle>
-                    <CardDescription>
-                      Access your events, attendance, and certificates.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="you@college.edu"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="pl-10 bg-secondary border-border focus:border-primary"
-                        />
+                  <form onSubmit={handleLogin}>
+                    <CardHeader className="text-center">
+                      <CardTitle className="text-2xl">Welcome Back</CardTitle>
+                      <CardDescription>
+                        Access your events, attendance, and certificates.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            id="email"
+                            type="email"
+                            placeholder="you@college.edu"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="pl-10 bg-secondary border-border focus:border-primary"
+                            required
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="password"
-                          type="password"
-                          placeholder="••••••••"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          className="pl-10 bg-secondary border-border focus:border-primary"
-                        />
+                      <div className="space-y-2">
+                        <Label htmlFor="password">Password</Label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            id="password"
+                            type="password"
+                            placeholder="••••••••"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="pl-10 bg-secondary border-border focus:border-primary"
+                            required
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <label className="flex items-center gap-2 text-muted-foreground cursor-pointer">
-                        <input type="checkbox" className="rounded border-border" />
-                        Remember me
-                      </label>
-                      <a href="#" className="text-primary hover:underline">
-                        Forgot password?
-                      </a>
-                    </div>
-                    <Button className="w-full" asChild>
-                      <Link to="/dashboard">
+                      <Button className="w-full" type="submit" disabled={isLoading}>
+                        {isLoading ? (
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        ) : null}
                         Login
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Link>
-                    </Button>
-                  </CardContent>
+                        {!isLoading && <ArrowRight className="w-4 h-4 ml-2" />}
+                      </Button>
+                    </CardContent>
+                  </form>
                 </TabsContent>
 
                 {/* Register Form */}
                 <TabsContent value="register" className="mt-0">
-                  <CardHeader className="text-center">
-                    <CardTitle className="text-2xl">Create Your Account</CardTitle>
-                    <CardDescription>
-                      Join your campus event ecosystem.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="name"
-                          type="text"
-                          placeholder="John Doe"
-                          className="pl-10 bg-secondary border-border focus:border-primary"
-                        />
+                  <form onSubmit={handleRegister}>
+                    <CardHeader className="text-center">
+                      <CardTitle className="text-2xl">Create Your Account</CardTitle>
+                      <CardDescription>
+                        Join your campus event ecosystem.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Full Name</Label>
+                        <div className="relative">
+                          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            id="name"
+                            type="text"
+                            placeholder="John Doe"
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            className="pl-10 bg-secondary border-border focus:border-primary"
+                            required
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="register-email">Email</Label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="register-email"
-                          type="email"
-                          placeholder="you@college.edu"
-                          className="pl-10 bg-secondary border-border focus:border-primary"
-                        />
+                      <div className="space-y-2">
+                        <Label htmlFor="register-email">Email</Label>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            id="register-email"
+                            type="email"
+                            placeholder="you@college.edu"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="pl-10 bg-secondary border-border focus:border-primary"
+                            required
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="register-password">Password</Label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="register-password"
-                          type="password"
-                          placeholder="••••••••"
-                          className="pl-10 bg-secondary border-border focus:border-primary"
-                        />
+                      <div className="space-y-2">
+                        <Label htmlFor="register-password">Password</Label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            id="register-password"
+                            type="password"
+                            placeholder="••••••••"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="pl-10 bg-secondary border-border focus:border-primary"
+                            required
+                            minLength={6}
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Account Type</Label>
-                      <div className="grid grid-cols-2 gap-3">
-                        <Button variant="outline" className="h-auto py-4 flex flex-col gap-1 border-primary bg-primary/10">
-                          <span className="text-lg">👨‍🎓</span>
-                          <span className="text-xs">Student</span>
-                        </Button>
-                        <Button variant="outline" className="h-auto py-4 flex flex-col gap-1">
-                          <span className="text-lg">🏫</span>
-                          <span className="text-xs">Club Admin</span>
-                        </Button>
-                      </div>
-                    </div>
-                    <Button className="w-full">
-                      Create Account
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </CardContent>
+                      <p className="text-xs text-muted-foreground">
+                        By creating an account, you'll start as a student. Contact admin for club organizer access.
+                      </p>
+                      <Button className="w-full" type="submit" disabled={isLoading}>
+                        {isLoading ? (
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        ) : null}
+                        Create Account
+                        {!isLoading && <ArrowRight className="w-4 h-4 ml-2" />}
+                      </Button>
+                    </CardContent>
+                  </form>
                 </TabsContent>
               </Tabs>
             </Card>
